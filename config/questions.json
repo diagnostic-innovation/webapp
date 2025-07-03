@@ -1,0 +1,111 @@
+{
+  "metadata": {
+    "version": "2.0.0",
+    "title": "Diagnostic Innovation",
+    "description": "Découvrez votre profil d'innovateur",
+    "author": "Valmen Consulting"
+  },
+  "identification": [
+    {
+      "id": "I1",
+      "question": "Dans mon organisation, j'ai le rôle de :",
+      "answers": [
+        { "text": "Direction", "value": "Direction" },
+        { "text": "Management", "value": "Management" },
+        { "text": "Opérationnel", "value": "Opérationnel" }
+      ]
+    },
+    {
+      "id": "I2",
+      "question": "J'exerce mon rôle dans une Direction :",
+      "answers": [
+        { "text": "Informatique", "value": "Informatique" },
+        { "text": "Métier", "value": "Métier" },
+        { "text": "Support", "value": "Support" }
+      ]
+    }
+  ],
+  "diagnostic": [
+    {
+      "id": "Q1",
+      "question": "Ce qui me plaît dans un projet c'est :",
+      "answers": [
+        { "text": "De rendre les idées concrètes", "profile": "concepteur" },
+        { "text": "D'imaginer des concepts", "profile": "explorateur" },
+        { "text": "De fédérer une équipe", "profile": "impulseur" }
+      ]
+    },
+    {
+      "id": "Q2",
+      "question": "Dans mon travail, j'ai besoin d'un environnement :",
+      "answers": [
+        { "text": "Cadré : j'aime savoir où je vais et quelles sont les prochaines actions", "profile": "concepteur" },
+        { "text": "Excitant : j'ai besoin de sensations fortes et de relever des défis", "profile": "impulseur" },
+        { "text": "Ouvert : j'aime avant tout les contacts variés et les approches ludiques ou atypiques", "profile": "explorateur" }
+      ]
+    },
+    {
+      "id": "Q3",
+      "question": "Quand j'arrive dans une nouvelle équipe projet :",
+      "answers": [
+        { "text": "J'essaie de comprendre les personnalités de chacun", "profile": "impulseur" },
+        { "text": "J'essaie de décliner les ambitions en objectifs atteignables", "profile": "concepteur" },
+        { "text": "J'essaie d'apporter un nouvel angle d'approche", "profile": "explorateur" }
+      ]
+    },
+    {
+      "id": "Q4",
+      "question": "En cas de problème sur un projet, j'ai tendance à :",
+      "answers": [
+        { "text": "Mettre les bouchées doubles pour sauver le projet", "profile": "concepteur" },
+        { "text": "Remotiver les membres de l'équipe", "profile": "impulseur" },
+        { "text": "Aller chercher de l'inspiration à l'extérieur", "profile": "explorateur" }
+      ]
+    },
+    {
+      "id": "Q5",
+      "question": "Au sein d'une équipe de prototypage, je suis plutôt celui qui :",
+      "answers": [
+        { "text": "Orchestre les rituels d'équipe", "profile": "impulseur" },
+        { "text": "Donne des idées pour inspirer", "profile": "explorateur" },
+        { "text": "Identifie tous les scénarios possibles", "profile": "concepteur" }
+      ]
+    },
+    {
+      "id": "Q6",
+      "question": "Lors d'une séance d'idéation je suis plutôt :",
+      "answers": [
+        { "text": "Pragmatique, j'ai des idées pour faire avancer la problématique", "profile": "concepteur" },
+        { "text": "Disruptif, j'ai souvent des idées qui sortent du cadre", "profile": "explorateur" },
+        { "text": "Animateur, j'aime encourager les débats", "profile": "impulseur" }
+      ]
+    },
+    {
+      "id": "Q7",
+      "question": "Un rendez-vous vient d'être annulé, j'ai une heure de libre j'en profite pour :",
+      "answers": [
+        { "text": "Faire de la veille", "profile": "explorateur" },
+        { "text": "Échanger avec les autres membres de l'équipe pour voir où ils en sont", "profile": "impulseur" },
+        { "text": "M'avancer sur mes actions", "profile": "concepteur" }
+      ]
+    },
+    {
+      "id": "Q8",
+      "question": "Lorsqu'on me demande mon aide c'est généralement pour :",
+      "answers": [
+        { "text": "Résoudre un conflit", "profile": "impulseur" },
+        { "text": "Débloquer une situation en trouvant une solution", "profile": "explorateur" },
+        { "text": "Trouver la cause racine d'un problème", "profile": "concepteur" }
+      ]
+    },
+    {
+      "id": "Q9",
+      "question": "Lequel de ces 3 métiers pourriez-vous exercer :",
+      "answers": [
+        { "text": "Coach", "profile": "impulseur" },
+        { "text": "Architecte", "profile": "concepteur" },
+        { "text": "Publicitaire", "profile": "explorateur" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "app": {
+    "name": "Diagnostic Innovation",
+    "version": "2.0.0",
+    "description": "Découvrez votre profil d'innovateur selon la méthode Valmen Consulting",
+    "author": "Valmen Consulting"
+  },
+  "branding": {
+    "company_name": "VALMEN",
+    "company_subtitle": "CONSULTING",
+    "tagline": "Nous œuvrons pour une digitalisation positive pour l'Humain"
+  },
+  "features": {
+    "security": {
+      "enabled": true,
+      "session_timeout": 1800,
+      "auto_cleanup": true
+    },
+    "privacy": {
+      "gdpr_compliance": true,
+      "consent_required": true
+    }
+  }
+}

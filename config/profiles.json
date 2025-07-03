@@ -1,0 +1,22 @@
+{
+  "profiles": {
+    "impulseur": {
+      "id": "impulseur",
+      "name": "IMPULSEUR",
+      "icon": "👥",
+      "description": "« Énergiseur » d'équipe, l'impulseur nourrit le collectif"
+    },
+    "concepteur": {
+      "id": "concepteur",
+      "name": "CONCEPTEUR", 
+      "icon": "📦",
+      "description": "« Résolveur » de casse tête, le concepteur rend possible"
+    },
+    "explorateur": {
+      "id": "explorateur",
+      "name": "EXPLORATEUR",
+      "icon": "🚀", 
+      "description": "« Découvreur » de perspectives, l'explorateur apporte des idées"
+    }
+  }
+}
