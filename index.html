@@ -744,7 +744,23 @@
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
-        }
+			
+			@media (max-width: 768px) {
+			#methodsDetailsList {
+			grid-template-columns: 1fr !important;
+			gap: 20px;
+    }
+    
+    .result-card {
+        min-width: 280px;
+        max-width: 280px;
+        margin-bottom: 15px;
+    }
+    
+    .result-card.highest {
+        transform: none;
+    }
+}
     </style>
 </body>
 </html>
