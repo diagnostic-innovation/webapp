@@ -1,13 +1,34 @@
 {
   "metadata": {
-    "version": "2.0.0",
-    "title": "Diagnostic Innovation",
-    "description": "Découvrez votre profil d'innovateur",
-    "author": "Valmen Consulting"
+    "version": "2.1.0",
+    "title": "Diagnostic Innovation Complet",
+    "description": "Découvrez votre profil d'innovateur et évaluez vos méthodes et organisation",
+    "author": "Valmen Consulting",
+    "total_questions": 37,
+    "sections": ["identification", "organization", "diagnostic", "methods"]
   },
   "identification": [
     {
       "id": "I1",
+      "type": "input",
+      "question": "Nom ?",
+      "required": true
+    },
+    {
+      "id": "I2",
+      "type": "input",
+      "question": "Mon entreprise",
+      "required": true
+    },
+    {
+      "id": "I3",
+      "type": "input",
+      "question": "Mon adresse mail (facultatif)",
+      "required": false
+    },
+    {
+      "id": "I4",
+      "type": "choice",
       "question": "Dans mon organisation, j'ai le rôle de :",
       "answers": [
         { "text": "Direction", "value": "Direction" },
@@ -16,12 +37,143 @@
       ]
     },
     {
-      "id": "I2",
+      "id": "I5",
+      "type": "choice",
       "question": "J'exerce mon rôle dans une Direction :",
       "answers": [
         { "text": "Informatique", "value": "Informatique" },
         { "text": "Métier", "value": "Métier" },
         { "text": "Support", "value": "Support" }
+      ]
+    }
+  ],
+  "organization": [
+    {
+      "id": "E1",
+      "thematic": "Gouvernance",
+      "type": "recolte",
+      "question": "Selon vous, quel animal reflèterait le mieux votre organisation ?",
+      "answers": [
+        { "text": "Un éléphant, lent dans ses mouvements mais une sagesse dans ses décisions", "value": "elephant" },
+        { "text": "Un fauve, parfois brute mais qui atteint souvent son objectif", "value": "fauve" },
+        { "text": "Une antilope, pas la plus impressionnante mais rapide pour atteindre sa destination", "value": "antilope" }
+      ]
+    },
+    {
+      "id": "E2",
+      "thematic": "Origine",
+      "type": "recolte",
+      "question": "Je dirais que dans mon organisation, ce qui déclenche l'innovation c'est :",
+      "answers": [
+        { "text": "La déclinaison de la stratégie définie par la Direction", "value": "strategie" },
+        { "text": "L'évolution du cadre réglementaire et sa mise en conformité", "value": "reglementaire" },
+        { "text": "La recherche de solutions opérationnelles pour améliorer l'existant", "value": "operationnel" },
+        { "text": "Les nouvelles attentes des clients ou une compétitivité avec la concurrence", "value": "client_concurrence" }
+      ]
+    },
+    {
+      "id": "E3",
+      "thematic": "Orientation",
+      "type": "recolte",
+      "question": "Quelle est la nature des innovations qui sont générées dans l'organisation ?",
+      "answers": [
+        { "text": "Organisationnelles, elles concernent les processus et les pratiques", "value": "organisationnelles" },
+        { "text": "Digitales, elles concernent avant tout la technologie et les outils", "value": "digitales" },
+        { "text": "Humaines, elles modifient notre fonctionnement et nos rituels quotidiens", "value": "humaines" }
+      ]
+    },
+    {
+      "id": "E4",
+      "thematic": "Moteur projet",
+      "type": "recolte",
+      "question": "Un projet standard dans mon organisation dure en moyenne :",
+      "answers": [
+        { "text": "De 0 à 6 mois", "value": "0-6mois" },
+        { "text": "De 6 mois à 1 an", "value": "6mois-1an" },
+        { "text": "De 1 à 2 ans", "value": "1-2ans" },
+        { "text": "Plus de 2 ans", "value": "plus2ans" }
+      ]
+    },
+    {
+      "id": "E5",
+      "thematic": "Moteur projet",
+      "type": "recolte",
+      "question": "Le dernier projet majeur a duré :",
+      "answers": [
+        { "text": "De 0 à 6 mois", "value": "0-6mois" },
+        { "text": "De 6 mois à 1 an", "value": "6mois-1an" },
+        { "text": "De 1 à 2 ans", "value": "1-2ans" },
+        { "text": "Plus de 2 ans", "value": "plus2ans" },
+        { "text": "Ne sais pas", "value": "inconnu" }
+      ]
+    },
+    {
+      "id": "E6",
+      "thematic": "Culture intrapreneur",
+      "type": "recolte",
+      "question": "Lorsque j'ai une idée d'amélioration pour l'organisation, les processus et les pratiques :",
+      "answers": [
+        { "text": "Je passe par un dispositif de l'organisation qui collecte les idées de tous", "value": "dispositif_org" },
+        { "text": "Je la propose à mon supérieur et nous voyons ensemble comment la décliner sur notre périmètre", "value": "superieur" },
+        { "text": "Je rentre dans le bureau du Directeur et lui expose mon idée", "value": "directeur_direct" }
+      ]
+    },
+    {
+      "id": "E7",
+      "thematic": "Culture intrapreneur",
+      "type": "recolte",
+      "question": "La dernière idée que vous avez proposée :",
+      "answers": [
+        { "text": "Est classée sans suite, elle n'est pas la priorité de l'organisation", "value": "sans_suite" },
+        { "text": "Est restée dans les cartons en attendant sa mise en œuvre", "value": "en_attente" },
+        { "text": "Je mène moi-même cette idée jusqu'à sa mise en œuvre dans mon travail", "value": "autonome" },
+        { "text": "Est déjà implémentée", "value": "implementee" }
+      ]
+    },
+    {
+      "id": "E8",
+      "thematic": "Test & Learn",
+      "type": "recolte",
+      "question": "Comment est perçu le droit à l'erreur dans votre organisation ?",
+      "answers": [
+        { "text": "Les projets menés ont un objectif de réussite, peu d'erreurs possibles", "value": "peu_erreurs" },
+        { "text": "Les tests ratés sont communément admis dans l'organisation", "value": "tests_admis" },
+        { "text": "C'est encouragé, nous avons une culture développée de l'expérimentation", "value": "culture_experimentation" }
+      ]
+    },
+    {
+      "id": "E9",
+      "thematic": "Open-Innovation",
+      "type": "recolte",
+      "question": "À travers vos activités, avec quelles parties prenantes avez-vous des interactions ?",
+      "answers": [
+        { "text": "Souvent avec les collègues de mon métier et de mon périmètre", "value": "collegues_metier" },
+        { "text": "Avec des entités transverses à travers les projets menés", "value": "entites_transverses" },
+        { "text": "Avec des acteurs du marché pour partager nos pratiques et nos fonctionnements", "value": "acteurs_marche" },
+        { "text": "Avec des éditeurs et des créateurs de nouvelles solutions", "value": "editeurs_createurs" },
+        { "text": "Nombre et nature des relations avec l'écosystème extérieur : partenaires, écoles...", "value": "ecosysteme_exterieur" }
+      ]
+    },
+    {
+      "id": "E10",
+      "thematic": "Innovation sous contrainte",
+      "type": "recolte",
+      "question": "Comment percevez-vous l'arrivée d'une nouvelle réglementation dans votre activité ?",
+      "answers": [
+        { "text": "Des impacts sur notre activité qui vont nous obliger à tout recommencer", "value": "impacts_negatifs" },
+        { "text": "Une contrainte de plus, avec laquelle il va falloir composer", "value": "contrainte_supplementaire" },
+        { "text": "Une formidable opportunité d'innover et faire évoluer notre manière de travailler", "value": "opportunite_innovation" }
+      ]
+    },
+    {
+      "id": "E11",
+      "thematic": "Veille",
+      "type": "recolte",
+      "question": "Comment apprenez-vous la création d'une nouvelle norme sur votre métier ?",
+      "answers": [
+        { "text": "Par mes propres moyens, je réalise une veille pour m'informer", "value": "veille_personnelle" },
+        { "text": "L'organisation a déjà étudié ses impacts, à nous de voir comment les décliner", "value": "organisation_etudie" },
+        { "text": "Souvent trop tard, nous allons courir pour la rattraper", "value": "trop_tard" }
       ]
     }
   ],
@@ -105,6 +257,140 @@
         { "text": "Coach", "profile": "impulseur" },
         { "text": "Architecte", "profile": "concepteur" },
         { "text": "Publicitaire", "profile": "explorateur" }
+      ]
+    }
+  ],
+  "methods": [
+    {
+      "id": "M1",
+      "domain": "agilite",
+      "type": "auto_eval",
+      "question": "Quel est votre niveau de maîtrise de l'Agilité ?",
+      "answers": [
+        { "text": "Faible", "score": 0 },
+        { "text": "Satisfaisant", "score": 50 },
+        { "text": "Parfait", "score": 100 }
+      ]
+    },
+    {
+      "id": "M2",
+      "domain": "agilite",
+      "type": "evaluation",
+      "question": "Quel concept représente le mieux la philosophie Agile ?",
+      "answers": [
+        { "text": "Adaptation continue face au changement", "score": 100 },
+        { "text": "Construction de la documentation au fil du temps", "score": 50 },
+        { "text": "Réduction des coûts par anticipation", "score": 0 }
+      ]
+    },
+    {
+      "id": "M3",
+      "domain": "agilite",
+      "type": "evaluation",
+      "question": "Parmi ces mots, lequel illustre le mieux l'esprit d'une équipe Agile ?",
+      "answers": [
+        { "text": "Autonomie encadrée par l'organisation", "score": 50 },
+        { "text": "Collaboration interdisciplinaire", "score": 100 },
+        { "text": "Hiérarchie et rôles clairement définis", "score": 0 }
+      ]
+    },
+    {
+      "id": "M4",
+      "domain": "agilite",
+      "type": "evaluation",
+      "question": "Quel terme est central dans la gestion de projet Agile ?",
+      "answers": [
+        { "text": "Planning fixe sur le long terme", "score": 0 },
+        { "text": "Rapport de performance trimestriel", "score": 50 },
+        { "text": "Itération", "score": 100 }
+      ]
+    },
+    {
+      "id": "M5",
+      "domain": "design_thinking",
+      "type": "auto_eval",
+      "question": "Quel est votre niveau de maîtrise du Design Thinking ?",
+      "answers": [
+        { "text": "Faible", "score": 0 },
+        { "text": "Satisfaisant", "score": 50 },
+        { "text": "Parfait", "score": 100 }
+      ]
+    },
+    {
+      "id": "M6",
+      "domain": "design_thinking",
+      "type": "evaluation",
+      "question": "Quel mot incarne le mieux le point de départ d'un processus de Design Thinking ?",
+      "answers": [
+        { "text": "Recherche de rentabilité", "score": 50 },
+        { "text": "Vision stratégique", "score": 0 },
+        { "text": "Empathie client", "score": 100 }
+      ]
+    },
+    {
+      "id": "M7",
+      "domain": "design_thinking",
+      "type": "evaluation",
+      "question": "Quel concept est au cœur du prototypage dans le Design Thinking ?",
+      "answers": [
+        { "text": "Tester rapidement des idées", "score": 100 },
+        { "text": "Réduire les coûts d'industrialisation", "score": 50 },
+        { "text": "Valider un concept informatique", "score": 0 }
+      ]
+    },
+    {
+      "id": "M8",
+      "domain": "design_thinking",
+      "type": "evaluation",
+      "question": "Quelle notion est la plus liée à la phase d'idéation ?",
+      "answers": [
+        { "text": "Pensée utilisateur", "score": 50 },
+        { "text": "Pensée divergente", "score": 100 },
+        { "text": "Esprit créatif", "score": 0 }
+      ]
+    },
+    {
+      "id": "M9",
+      "domain": "lean_startup",
+      "type": "auto_eval",
+      "question": "Quel est votre niveau de maîtrise du Lean Start-up ?",
+      "answers": [
+        { "text": "Faible", "score": 0 },
+        { "text": "Satisfaisant", "score": 50 },
+        { "text": "Parfait", "score": 100 }
+      ]
+    },
+    {
+      "id": "M10",
+      "domain": "lean_startup",
+      "type": "evaluation",
+      "question": "Quel terme décrit le mieux l'approche de développement produit dans le Lean Start-up ?",
+      "answers": [
+        { "text": "Produit proposant des innovations", "score": 0 },
+        { "text": "Cahier des charges construit en itérations", "score": 50 },
+        { "text": "MVP (Produit Minimum Viable)", "score": 100 }
+      ]
+    },
+    {
+      "id": "M11",
+      "domain": "lean_startup",
+      "type": "evaluation",
+      "question": "Quel principe est central dans le cycle Lean Start-up ?",
+      "answers": [
+        { "text": "Stratégie, déploiement, suivi", "score": 50 },
+        { "text": "Construction, mesure, apprentissage", "score": 100 },
+        { "text": "Vision, organisation, exécution", "score": 0 }
+      ]
+    },
+    {
+      "id": "M12",
+      "domain": "lean_startup",
+      "type": "evaluation",
+      "question": "Quel mot reflète le mieux l'attitude attendue dans une démarche Lean Start-up ?",
+      "answers": [
+        { "text": "Cause et effet", "score": 100 },
+        { "text": "Apprentissage validé", "score": 50 },
+        { "text": "Croissance rapide", "score": 0 }
       ]
     }
   ]
