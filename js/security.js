@@ -1,5 +1,5 @@
 /**
- * Diagnostic Innovation v2.0 - Security Manager
+ * Diagnostic Innovation v2.1.0 - Security Manager
  * Gestionnaire de sécurité pour la protection des données et de la méthode
  * (c) Valmen Consulting
  */
@@ -13,11 +13,15 @@ class SecurityManager {
         this.sessionKey = this.generateSessionKey();
         this.userData = new Map();
         this.startTime = Date.now();
-        this.maxDuration = 20 * 60 * 1000; // 30 minutes
+        this.maxDuration = 30 * 60 * 1000; // 30 minutes (selon app-config.json)
         this.isDestroyed = false;
         this.monitors = new Map();
+        this.cryptoAvailable = typeof CryptoJS !== 'undefined';
         
-        console.log('🔒 SecurityManager v2.0 initialisé');
+        console.log('🔒 SecurityManager v2.1.0 initialisé');
+        if (!this.cryptoAvailable) {
+            console.warn('⚠️ CryptoJS non disponible - mode de sécurité dégradé');
+        }
         this.initializeSecurityMonitors();
     }
 
@@ -34,12 +38,34 @@ class SecurityManager {
         ];
         
         const combined = components.join('_');
-        return CryptoJS.SHA256(combined).toString().substring(0, 32);
+        
+        if (this.cryptoAvailable) {
+            return CryptoJS.SHA256(combined).toString().substring(0, 32);
+        } else {
+            // Mode dégradé : hash simple
+            return this.simpleHash(combined).substring(0, 32);
+        }
     }
 
     generateEncryptionKey(context = '') {
         const base = this.sessionKey + context + Date.now();
-        return CryptoJS.SHA256(base).toString().substring(0, 32);
+        
+        if (this.cryptoAvailable) {
+            return CryptoJS.SHA256(base).toString().substring(0, 32);
+        } else {
+            return this.simpleHash(base).substring(0, 32);
+        }
+    }
+
+    // Hash simple pour mode dégradé
+    simpleHash(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return Math.abs(hash).toString(36);
     }
 
     // ========================================================================
@@ -52,18 +78,31 @@ class SecurityManager {
         }
 
         try {
-            const key = this.generateEncryptionKey(context);
             const serialized = JSON.stringify(data);
             
-            // Envelope avec métadonnées de sécurité
-            const envelope = {
-                data: serialized,
-                timestamp: Date.now(),
-                checksum: CryptoJS.SHA256(serialized).toString(),
-                context: context
-            };
+            if (this.cryptoAvailable) {
+                const key = this.generateEncryptionKey(context);
+                
+                // Envelope avec métadonnées de sécurité
+                const envelope = {
+                    data: serialized,
+                    timestamp: Date.now(),
+                    checksum: CryptoJS.SHA256(serialized).toString(),
+                    context: context
+                };
 
-            return CryptoJS.AES.encrypt(JSON.stringify(envelope), key).toString();
+                return CryptoJS.AES.encrypt(JSON.stringify(envelope), key).toString();
+            } else {
+                // Mode dégradé : encodage simple
+                const envelope = {
+                    data: serialized,
+                    timestamp: Date.now(),
+                    checksum: this.simpleHash(serialized),
+                    context: context
+                };
+                
+                return btoa(JSON.stringify(envelope));
+            }
         } catch (error) {
             console.error('❌ Erreur chiffrement:', error.message);
             return null;
@@ -76,20 +115,34 @@ class SecurityManager {
         }
 
         try {
-            const key = this.generateEncryptionKey(context);
-            const decryptedBytes = CryptoJS.AES.decrypt(encryptedData, key);
-            const decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
+            let envelope;
             
-            if (!decryptedText) {
-                throw new Error('Déchiffrement échoué');
-            }
-            
-            const envelope = JSON.parse(decryptedText);
-            
-            // Vérification d'intégrité
-            const calculatedChecksum = CryptoJS.SHA256(envelope.data).toString();
-            if (calculatedChecksum !== envelope.checksum) {
-                throw new Error('Intégrité des données compromise');
+            if (this.cryptoAvailable) {
+                const key = this.generateEncryptionKey(context);
+                const decryptedBytes = CryptoJS.AES.decrypt(encryptedData, key);
+                const decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
+                
+                if (!decryptedText) {
+                    throw new Error('Déchiffrement échoué');
+                }
+                
+                envelope = JSON.parse(decryptedText);
+                
+                // Vérification d'intégrité
+                const calculatedChecksum = CryptoJS.SHA256(envelope.data).toString();
+                if (calculatedChecksum !== envelope.checksum) {
+                    throw new Error('Intégrité des données compromise');
+                }
+            } else {
+                // Mode dégradé : décodage simple
+                const decryptedText = atob(encryptedData);
+                envelope = JSON.parse(decryptedText);
+                
+                // Vérification d'intégrité simplifiée
+                const calculatedChecksum = this.simpleHash(envelope.data);
+                if (calculatedChecksum !== envelope.checksum) {
+                    throw new Error('Intégrité des données compromise');
+                }
             }
 
             // Vérification de fraîcheur (24h max)
@@ -399,17 +452,19 @@ class SecurityManager {
         }, 4000);
     }
 
-	showSessionExpiredWarning() {
-		// Message personnalisé avec alert() pour une "box" plus visible
-    alert('Le délai est dépassé, il faut lancer un nouveau diagnostic');
-    
-		// Redémarrage immédiat après le clic sur OK
-    if (typeof restartApplication === 'function') {
-        restartApplication();
-    } else {
-        location.reload();
+    showSessionExpiredWarning() {
+        // Message personnalisé avec alert() pour une "box" plus visible
+        alert('Le délai est dépassé, il faut lancer un nouveau diagnostic');
+        
+        // Redémarrage immédiat après le clic sur OK
+        if (typeof window.restartDiagnostic === 'function') {
+            window.restartDiagnostic();
+        } else if (typeof window.showScreen === 'function') {
+            window.showScreen('welcome');
+        } else {
+            location.reload();
+        }
     }
-}
 
     logSecurityEvent(event, details = {}) {
         const logEntry = {
@@ -430,7 +485,11 @@ class SecurityManager {
     // ========================================================================
 
     generateHash(data) {
-        return CryptoJS.SHA256(JSON.stringify(data)).toString();
+        if (this.cryptoAvailable) {
+            return CryptoJS.SHA256(JSON.stringify(data)).toString();
+        } else {
+            return this.simpleHash(JSON.stringify(data));
+        }
     }
 
     verifyIntegrity(data, expectedHash) {
@@ -448,8 +507,8 @@ class SecurityManager {
             sessionAge: Date.now() - this.startTime,
             remainingTime: this.getSessionRemainingTime(),
             dataKeys: Array.from(this.userData.keys()),
-            securityLevel: 'HIGH',
-            version: '2.0'
+            securityLevel: this.cryptoAvailable ? 'HIGH' : 'MEDIUM',
+            version: '2.1.0'
         };
     }
 
@@ -460,7 +519,6 @@ class SecurityManager {
     static isSecuritySupported() {
         return !!(
             window.crypto && 
-            window.CryptoJS &&
             typeof Storage !== 'undefined'
         );
     }
@@ -515,16 +573,11 @@ function destroyGlobalSecurity() {
 // INITIALISATION AUTOMATIQUE
 // ============================================================================
 
-console.log('📁 security.js v2.0 chargé');
+console.log('📁 security.js v2.1.0 chargé');
 
-// Auto-initialisation si CryptoJS est disponible
-if (typeof CryptoJS !== 'undefined') {
-    // Attendre que le DOM soit prêt
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            // L'initialisation sera faite par app.js
-        });
-    }
-} else {
-    console.warn('⚠️ CryptoJS non disponible - fonctions de sécurité limitées');
+// Auto-initialisation différée
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        // L'initialisation sera faite par app.js
+    });
 }

@@ -1,651 +1,637 @@
 /**
- * Diagnostic Innovation v2.0 - Data Manager
- * Gestionnaire de chargement et traitement des données (questions, profils, config)
+ * Diagnostic Innovation v2.1.0 - Data Manager
+ * Version minimale pour test avec l'index.html existant
  * (c) Valmen Consulting
  */
 
 // ============================================================================
-// GESTIONNAIRE DE DONNÉES PRINCIPAL
+// DONNÉES DES QUESTIONS
 // ============================================================================
 
-class DataManager {
-    constructor() {
-        this.questions = null;
-        this.profiles = null;
-        this.config = null;
-        this.isLoaded = false;
-        this.cache = new Map();
-        
-        console.log('📊 DataManager v2.0 initialisé');
-    }
-
-    // ========================================================================
-    // CHARGEMENT DES FICHIERS JSON
-    // ========================================================================
-
-    async loadQuestions() {
-        try {
-            console.log('📋 Chargement des questions...');
-            const response = await fetch('config/questions.json');
-            
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP ${response.status}: ${response.statusText}`);
-            }
-            
-            const data = await response.json();
-            
-            // Validation de base
-            if (!data.identification || !data.diagnostic) {
-                throw new Error('Structure de questions invalide');
-            }
-            
-            this.questions = data;
-            this.cache.set('questions', data);
-            console.log('✅ Questions chargées:', data.identification.length, 'identification +', data.diagnostic.length, 'diagnostic');
-            
-            return data;
-        } catch (error) {
-            console.error('❌ Erreur chargement questions:', error.message);
-            return this.getQuestionsDefault();
-        }
-    }
-
-    async loadProfiles() {
-        try {
-            console.log('👥 Chargement des profils...');
-            const response = await fetch('config/profiles.json');
-            
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP ${response.status}: ${response.statusText}`);
-            }
-            
-            const data = await response.json();
-            
-            // Validation de base
-            if (!data.profiles) {
-                throw new Error('Structure de profils invalide');
-            }
-            
-            this.profiles = data;
-            this.cache.set('profiles', data);
-            console.log('✅ Profils chargés:', Object.keys(data.profiles).length, 'profils');
-            
-            return data;
-        } catch (error) {
-            console.error('❌ Erreur chargement profils:', error.message);
-            return this.getProfilesDefault();
-        }
-    }
-
-    async loadConfig() {
-        try {
-            console.log('⚙️ Chargement de la configuration...');
-            const response = await fetch('config/app-config.json');
-            
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP ${response.status}: ${response.statusText}`);
-            }
-            
-            const data = await response.json();
-            
-            this.config = data;
-            this.cache.set('config', data);
-            console.log('✅ Configuration chargée');
-            
-            return data;
-        } catch (error) {
-            console.error('❌ Erreur chargement config:', error.message);
-            return this.getConfigDefault();
-        }
-    }
-
-    // ========================================================================
-    // CHARGEMENT GLOBAL
-    // ========================================================================
-
-    async loadAll() {
-        console.log('🔄 Chargement de toutes les données...');
-        
-        try {
-            // Chargement en parallèle pour optimiser les performances
-            const [questions, profiles, config] = await Promise.all([
-                this.loadQuestions(),
-                this.loadProfiles(),
-                this.loadConfig()
-            ]);
-
-            this.isLoaded = true;
-            console.log('✅ Toutes les données chargées avec succès');
-            
-            return {
-                questions,
-                profiles,
-                config,
-                success: true
-            };
-        } catch (error) {
-            console.error('❌ Erreur chargement global:', error.message);
-            this.isLoaded = false;
-            
-            return {
-                questions: this.getQuestionsDefault(),
-                profiles: this.getProfilesDefault(),
-                config: this.getConfigDefault(),
-                success: false,
-                error: error.message
-            };
-        }
-    }
-
-    // ========================================================================
-    // ACCESSEURS DE DONNÉES
-    // ========================================================================
-
-    getIdentificationQuestions() {
-        return this.questions?.identification || this.getQuestionsDefault().identification;
-    }
-
-    getDiagnosticQuestions() {
-        return this.questions?.diagnostic || this.getQuestionsDefault().diagnostic;
-    }
-
-    getAllQuestions() {
-        const identification = this.getIdentificationQuestions();
-        const diagnostic = this.getDiagnosticQuestions();
-        
-        return [...identification, ...diagnostic];
-    }
-
-    getProfiles() {
-        return this.profiles?.profiles || this.getProfilesDefault().profiles;
-    }
-
-    getProfile(profileId) {
-        const profiles = this.getProfiles();
-        return profiles[profileId] || null;
-    }
-
-    getConfig() {
-        return this.config || this.getConfigDefault();
-    }
-
-    getAppInfo() {
-        const config = this.getConfig();
-        return {
-            name: config.app?.name || 'Diagnostic Innovation',
-            version: config.app?.version || '2.0.0',
-            description: config.app?.description || 'Découvrez votre profil d\'innovateur'
-        };
-    }
-
-    // ========================================================================
-    // DONNÉES PAR DÉFAUT (FALLBACK)
-    // ========================================================================
-
-    getQuestionsDefault() {
-        return {
-            metadata: {
-                version: "2.0.0",
-                title: "Diagnostic Innovation",
-                description: "Découvrez votre profil d'innovateur",
-                author: "Valmen Consulting"
-            },
-            identification: [
-                {
-                    id: "I1",
-                    question: "Dans mon organisation, j'ai le rôle de :",
-                    answers: [
-                        { text: "Direction", value: "Direction" },
-                        { text: "Management", value: "Management" },
-                        { text: "Opérationnel", value: "Opérationnel" }
-                    ]
-                },
-                {
-                    id: "I2",
-                    question: "J'exerce mon rôle dans une Direction :",
-                    answers: [
-                        { text: "Informatique", value: "Informatique" },
-                        { text: "Métier", value: "Métier" },
-                        { text: "Support", value: "Support" }
-                    ]
-                }
-            ],
-            diagnostic: [
-                {
-                    id: "Q1",
-                    question: "Ce qui me plaît dans un projet c'est :",
-                    answers: [
-                        { text: "De rendre les idées concrètes", profile: "concepteur" },
-                        { text: "D'imaginer des concepts", profile: "explorateur" },
-                        { text: "De fédérer une équipe", profile: "impulseur" }
-                    ]
-                },
-                {
-                    id: "Q2",
-                    question: "Dans mon travail, j'ai besoin d'un environnement :",
-                    answers: [
-                        { text: "Cadré : j'aime savoir où je vais et quelles sont les prochaines actions", profile: "concepteur" },
-                        { text: "Excitant : j'ai besoin de sensations fortes et de relever des défis", profile: "impulseur" },
-                        { text: "Ouvert : j'aime avant tout les contacts variés et les approches ludiques ou atypiques", profile: "explorateur" }
-                    ]
-                },
-                {
-                    id: "Q3",
-                    question: "Quand j'arrive dans une nouvelle équipe projet :",
-                    answers: [
-                        { text: "J'essaie de comprendre les personnalités de chacun", profile: "impulseur" },
-                        { text: "J'essaie de décliner les ambitions en objectifs atteignables", profile: "concepteur" },
-                        { text: "J'essaie d'apporter un nouvel angle d'approche", profile: "explorateur" }
-                    ]
-                }
-                // Ajout automatique des autres questions si nécessaire
+const questionsData = {
+    identification: [
+        {
+            id: "I4",
+            question: "Dans mon organisation, j'ai le rôle de :",
+            answers: [
+                { text: "Direction", value: "Direction" },
+                { text: "Management", value: "Management" },
+                { text: "Opérationnel", value: "Opérationnel" }
             ]
-        };
-    }
-
-    getProfilesDefault() {
-        return {
-            profiles: {
-                impulseur: {
-                    id: "impulseur",
-                    name: "IMPULSEUR",
-                    icon: "👥",
-                    description: "« Énergiseur » d'équipe, l'impulseur nourrit le collectif"
-                },
-                concepteur: {
-                    id: "concepteur",
-                    name: "CONCEPTEUR", 
-                    icon: "📦",
-                    description: "« Résolveur » de casse tête, le concepteur rend possible"
-                },
-                explorateur: {
-                    id: "explorateur",
-                    name: "EXPLORATEUR",
-                    icon: "🚀", 
-                    description: "« Découvreur » de perspectives, l'explorateur apporte des idées"
-                }
-            }
-        };
-    }
-
-    getConfigDefault() {
-        return {
-            app: {
-                name: "Diagnostic Innovation",
-                version: "2.0.0",
-                description: "Découvrez votre profil d'innovateur selon la méthode Valmen Consulting",
-                author: "Valmen Consulting"
-            },
-            branding: {
-                company_name: "VALMEN",
-                company_subtitle: "CONSULTING",
-                tagline: "Nous œuvrons pour une digitalisation positive pour l'Humain"
-            },
-            features: {
-                security: {
-                    enabled: true,
-                    session_timeout: 1800,
-                    auto_cleanup: true
-                },
-                privacy: {
-                    gdpr_compliance: true,
-                    consent_required: true
-                }
-            }
-        };
-    }
-
-    // ========================================================================
-    // VALIDATION DES DONNÉES
-    // ========================================================================
-
-    validateQuestions(questions) {
-        try {
-            // Vérification structure de base
-            if (!questions.identification || !Array.isArray(questions.identification)) {
-                throw new Error('Questions d\'identification manquantes ou invalides');
-            }
-
-            if (!questions.diagnostic || !Array.isArray(questions.diagnostic)) {
-                throw new Error('Questions de diagnostic manquantes ou invalides');
-            }
-
-            // Vérification du contenu
-            questions.identification.forEach((q, index) => {
-                if (!q.id || !q.question || !q.answers || !Array.isArray(q.answers)) {
-                    throw new Error(`Question identification ${index + 1} invalide`);
-                }
-            });
-
-            questions.diagnostic.forEach((q, index) => {
-                if (!q.id || !q.question || !q.answers || !Array.isArray(q.answers)) {
-                    throw new Error(`Question diagnostic ${index + 1} invalide`);
-                }
-                
-                // Vérification des profils dans les réponses
-                q.answers.forEach((answer, answerIndex) => {
-                    if (!answer.text || !answer.profile) {
-                        throw new Error(`Réponse ${answerIndex + 1} de la question ${index + 1} invalide`);
-                    }
-                });
-            });
-
-            return true;
-        } catch (error) {
-            console.error('❌ Validation questions échouée:', error.message);
-            return false;
+        },
+        {
+            id: "I5",
+            question: "J'exerce mon rôle dans une Direction :",
+            answers: [
+                { text: "Informatique", value: "Informatique" },
+                { text: "Métier", value: "Métier" },
+                { text: "Support", value: "Support" }
+            ]
         }
-    }
-
-    validateProfiles(profiles) {
-        try {
-            if (!profiles.profiles || typeof profiles.profiles !== 'object') {
-                throw new Error('Structure de profils invalide');
-            }
-
-            const requiredProfiles = ['impulseur', 'concepteur', 'explorateur'];
-            
-            requiredProfiles.forEach(profileId => {
-                const profile = profiles.profiles[profileId];
-                if (!profile || !profile.name || !profile.icon || !profile.description) {
-                    throw new Error(`Profil ${profileId} manquant ou invalide`);
-                }
-            });
-
-            return true;
-        } catch (error) {
-            console.error('❌ Validation profils échouée:', error.message);
-            return false;
-        }
-    }
-
-    // ========================================================================
-    // CACHE ET PERFORMANCE
-    // ========================================================================
-
-    clearCache() {
-        this.cache.clear();
-        console.log('🧹 Cache des données vidé');
-    }
-
-    getCachedData(key) {
-        return this.cache.get(key);
-    }
-
-    getLoadStatus() {
-        return {
-            isLoaded: this.isLoaded,
-            questionsLoaded: !!this.questions,
-            profilesLoaded: !!this.profiles,
-            configLoaded: !!this.config,
-            cacheSize: this.cache.size
-        };
-    }
-
-    // ========================================================================
-    // STATISTIQUES ET MÉTRIQUES
-    // ========================================================================
-
-    getQuestionnaireStats() {
-        const identification = this.getIdentificationQuestions();
-        const diagnostic = this.getDiagnosticQuestions();
-        
-        return {
-            totalQuestions: identification.length + diagnostic.length,
-            identificationQuestions: identification.length,
-            diagnosticQuestions: diagnostic.length,
-            profiles: Object.keys(this.getProfiles()).length,
-            loadTime: this.isLoaded ? 'Chargé' : 'Non chargé'
-        };
-    }
-
-    // ========================================================================
-    // EXPORT DE DONNÉES
-    // ========================================================================
-
-    exportQuestionnaire() {
-        return {
-            metadata: this.questions?.metadata || this.getQuestionsDefault().metadata,
-            identification: this.getIdentificationQuestions(),
-            diagnostic: this.getDiagnosticQuestions(),
-            profiles: this.getProfiles(),
-            exportDate: new Date().toISOString()
-        };
-    }
-}
-
-// ============================================================================
-// CALCULATEUR DE SCORES
-// ============================================================================
-
-class ScoreCalculator {
-    constructor(profiles) {
-        this.profiles = profiles || {};
-        this.profileKeys = Object.keys(this.profiles);
-    }
-
-    calculateScores(userAnswers) {
-        console.log('📊 Calcul des scores...');
-        
-        // Initialisation des scores
-        const scores = {};
-        this.profileKeys.forEach(profile => {
-            scores[profile] = 0;
-        });
-
-        // Comptage des réponses par profil
-        let validAnswers = 0;
-        userAnswers.forEach((answer, index) => {
-            if (answer && answer.profile && scores.hasOwnProperty(answer.profile)) {
-                scores[answer.profile]++;
-                validAnswers++;
-            }
-        });
-
-        if (validAnswers === 0) {
-            console.warn('⚠️ Aucune réponse valide pour le calcul');
-            return this.getDefaultScores();
-        }
-
-        // Conversion en pourcentages
-        const percentages = {};
-        this.profileKeys.forEach(profile => {
-            percentages[profile] = Math.round((scores[profile] / validAnswers) * 100);
-        });
-
-        console.log('✅ Scores calculés:', percentages);
-        return percentages;
-    }
-
-    getDominantProfile(scores) {
-        let maxScore = -1;
-        let dominantProfile = this.profileKeys[0] || 'concepteur';
-        
-        Object.entries(scores).forEach(([profile, score]) => {
-            if (score > maxScore) {
-                maxScore = score;
-                dominantProfile = profile;
-            }
-        });
-        
-        console.log(`🎯 Profil dominant: ${dominantProfile} (${maxScore}%)`);
-        return dominantProfile;
-    }
-
-    getProfilesRanking(scores) {
-        return Object.entries(scores)
-            .sort(([,a], [,b]) => b - a)
-            .map(([profile, score]) => ({ profile, score }));
-    }
-
-    getDefaultScores() {
-        const defaultScores = {};
-        this.profileKeys.forEach(profile => {
-            defaultScores[profile] = Math.floor(100 / this.profileKeys.length);
-        });
-        return defaultScores;
-    }
-
-    analyzeResults(scores) {
-        const ranking = this.getProfilesRanking(scores);
-        const dominant = this.getDominantProfile(scores);
-        const maxScore = Math.max(...Object.values(scores));
-        const minScore = Math.min(...Object.values(scores));
-        
-        return {
-            scores: scores,
-            dominant: dominant,
-            ranking: ranking,
-            analysis: {
-                maxScore: maxScore,
-                minScore: minScore,
-                spread: maxScore - minScore,
-                isBalanced: (maxScore - minScore) < 20,
-                type: this.getProfileType(scores)
-            }
-        };
-    }
-
-    getProfileType(scores) {
-        const values = Object.values(scores);
-        const max = Math.max(...values);
-        const equalProfiles = values.filter(score => score === max).length;
-        
-        if (equalProfiles > 1) {
-            return 'balanced';
-        } else if (max >= 50) {
-            return 'dominant';
-        } else {
-            return 'mixed';
-        }
-    }
-}
-
-// ============================================================================
-// VARIABLES GLOBALES
-// ============================================================================
-
-let globalDataManager = null;
-let globalScoreCalculator = null;
-
-// ============================================================================
-// FONCTIONS UTILITAIRES GLOBALES
-// ============================================================================
-
-async function initializeData() {
-    try {
-        console.log('🔄 Initialisation du gestionnaire de données...');
-        
-        globalDataManager = new DataManager();
-        const result = await globalDataManager.loadAll();
-        
-        if (result.success) {
-            // Initialisation du calculateur de scores
-            globalScoreCalculator = new ScoreCalculator(result.profiles.profiles);
-            console.log('✅ Données initialisées avec succès');
-            return { success: true, data: result };
-        } else {
-            console.warn('⚠️ Données initialisées avec des fallbacks');
-            globalScoreCalculator = new ScoreCalculator(result.profiles.profiles);
-            return { success: false, data: result, error: result.error };
-        }
-    } catch (error) {
-        console.error('❌ Erreur initialisation données:', error.message);
-        return { success: false, error: error.message };
-    }
-}
-
-function getDataManager() {
-    return globalDataManager;
-}
-
-function getScoreCalculator() {
-    return globalScoreCalculator;
-}
-
-function getIdentificationQuestions() {
-    return globalDataManager ? globalDataManager.getIdentificationQuestions() : [];
-}
-
-function getDiagnosticQuestions() {
-    return globalDataManager ? globalDataManager.getDiagnosticQuestions() : [];
-}
-
-function getProfiles() {
-    return globalDataManager ? globalDataManager.getProfiles() : {};
-}
-
-function getProfile(profileId) {
-    return globalDataManager ? globalDataManager.getProfile(profileId) : null;
-}
-
-function calculateUserScores(userAnswers) {
-    if (!globalScoreCalculator) {
-        console.error('❌ Calculateur de scores non initialisé');
-        return {};
-    }
-    return globalScoreCalculator.calculateScores(userAnswers);
-}
-
-function analyzeUserResults(userAnswers) {
-    if (!globalScoreCalculator) {
-        console.error('❌ Calculateur de scores non initialisé');
-        return null;
-    }
+    ],
     
-    const scores = globalScoreCalculator.calculateScores(userAnswers);
-    return globalScoreCalculator.analyzeResults(scores);
+    organization: [
+        {
+            id: "E1",
+            thematic: "Gouvernance",
+            question: "Selon vous, quel animal reflèterait le mieux votre organisation ?",
+            answers: [
+                { text: "Un éléphant, lent dans ses mouvements mais une sagesse dans ses décisions", value: "E1Q1" },
+                { text: "Un fauve, parfois brute mais qui atteint souvent son objectif", value: "E1Q2" },
+                { text: "Une antilope, pas la plus impressionnante mais rapide pour atteindre sa destination", value: "E1Q3" }
+            ]
+        },
+        {
+            id: "E2",
+            thematic: "Origine",
+            question: "Je dirais que dans mon organisation, ce qui déclenche l'innovation c'est :",
+            answers: [
+                { text: "La déclinaison de la stratégie définie par la Direction", value: "E2Q1" },
+                { text: "L'évolution du cadre réglementaire et sa mise en conformité", value: "E2Q2" },
+                { text: "La recherche de solutions opérationnelles pour améliorer l'existant", value: "E2Q3" },
+                { text: "Les nouvelles attentes des clients ou une compétitivité avec la concurrence", value: "E2Q4" }
+            ]
+        },
+        {
+            id: "E3",
+            thematic: "Orientation",
+            question: "Quelle est la nature des innovations qui sont générées dans l'organisation ?",
+            answers: [
+                { text: "Organisationnelles, elles concernent les processus et les pratiques", value: "E3Q1" },
+                { text: "Digitales, elles concernent avant tout la technologie et les outils", value: "E3Q2" },
+                { text: "Humaines, elles modifient notre fonctionnement et nos rituels quotidiens", value: "E3Q3" }
+            ]
+        },
+        {
+            id: "E4",
+            thematic: "Moteur projet",
+            question: "Un projet standard dans mon organisation dure en moyenne :",
+            answers: [
+                { text: "De 0 à 6 mois", value: "E4Q1" },
+                { text: "De 6 mois à 1 an", value: "E4Q2" },
+                { text: "De 1 à 2 ans", value: "E4Q3" },
+                { text: "Plus de 2 ans", value: "E4Q4" }
+            ]
+        },
+        {
+            id: "E5",
+            thematic: "Moteur projet",
+            question: "Le dernier projet majeur a duré :",
+            answers: [
+                { text: "De 0 à 6 mois", value: "E5Q1" },
+                { text: "De 6 mois à 1 an", value: "E5Q2" },
+                { text: "De 1 à 2 ans", value: "E5Q3" },
+                { text: "Plus de 2 ans", value: "E5Q4" },
+                { text: "Ne sais pas", value: "E5Q5" }
+            ]
+        },
+        {
+            id: "E6",
+            thematic: "Culture intrapreneur",
+            question: "Lorsque j'ai une idée d'amélioration pour l'organisation, les processus et les pratiques :",
+            answers: [
+                { text: "Je passe par un dispositif de l'organisation qui collecte les idées de tous", value: "E6Q1" },
+                { text: "Je la propose à mon supérieur et nous voyons ensemble comment la décliner sur notre périmètre", value: "E6Q2" },
+                { text: "Je rentre dans le bureau du Directeur et lui expose mon idée", value: "E6Q3" }
+            ]
+        },
+        {
+            id: "E7",
+            thematic: "Culture intrapreneur",
+            question: "La dernière idée que vous avez proposée :",
+            answers: [
+                { text: "Est classée sans suite, elle n'est pas la priorité de l'organisation", value: "E7Q1" },
+                { text: "Est restée dans les cartons en attendant sa mise en œuvre", value: "E7Q2" },
+                { text: "Je mène moi-même cette idée jusqu'à sa mise en œuvre dans mon travail", value: "E7Q3" },
+                { text: "Est déjà implémentée", value: "E7Q4" }
+            ]
+        },
+        {
+            id: "E8",
+            thematic: "Test & Learn",
+            question: "Comment est perçu le droit à l'erreur dans votre organisation ?",
+            answers: [
+                { text: "Les projets menés ont un objectif de réussite, peu d'erreurs possibles", value: "E8Q1" },
+                { text: "Les tests ratés sont communément admis dans l'organisation", value: "E8Q2" },
+                { text: "C'est encouragé, nous avons une culture développée de l'expérimentation", value: "E8Q3" }
+            ]
+        },
+        {
+            id: "E9",
+            thematic: "Open-Innovation",
+            question: "À travers vos activités, avec quelles parties prenantes avez-vous des interactions ?",
+            answers: [
+                { text: "Souvent avec les collègues de mon métier et de mon périmètre", value: "E9Q1" },
+                { text: "Avec des entités transverses à travers les projets menés", value: "E9Q2" },
+                { text: "Avec des acteurs du marché pour partager nos pratiques et nos fonctionnements", value: "E9Q3" },
+                { text: "Avec des éditeurs et des créateurs de nouvelles solutions", value: "E9Q4" },
+                { text: "Nombre et nature des relations avec l'écosystème extérieur : partenaires, écoles...", value: "E9Q5" }
+            ]
+        },
+        {
+            id: "E10",
+            thematic: "Innovation sous contrainte",
+            question: "Comment percevez-vous l'arrivée d'une nouvelle réglementation dans votre activité ?",
+            answers: [
+                { text: "Des impacts sur notre activité qui vont nous obliger à tout recommencer", value: "E10Q1" },
+                { text: "Une contrainte de plus, avec laquelle il va falloir composer", value: "E10Q2" },
+                { text: "Une formidable opportunité d'innover et faire évoluer notre manière de travailler", value: "E10Q3" }
+            ]
+        },
+        {
+            id: "E11",
+            thematic: "Veille",
+            question: "Comment apprenez-vous la création d'une nouvelle norme sur votre métier ?",
+            answers: [
+                { text: "Par mes propres moyens, je réalise une veille pour m'informer", value: "E11Q1" },
+                { text: "L'organisation a déjà étudié ses impacts, à nous de voir comment les décliner", value: "E11Q2" },
+                { text: "Souvent trop tard, nous allons courir pour la rattraper", value: "E11Q3" }
+            ]
+        }
+    ],
+    
+    diagnostic: [
+        {
+            id: "Q1",
+            question: "Ce qui me plaît dans un projet c'est :",
+            answers: [
+                { text: "De rendre les idées concrètes", profile: "concepteur" },
+                { text: "D'imaginer des concepts", profile: "explorateur" },
+                { text: "De fédérer une équipe", profile: "impulseur" }
+            ]
+        },
+        {
+            id: "Q2",
+            question: "Dans mon travail, j'ai besoin d'un environnement :",
+            answers: [
+                { text: "Cadré : j'aime savoir où je vais et quelles sont les prochaines actions", profile: "concepteur" },
+                { text: "Excitant : j'ai besoin de sensations fortes et de relever des défis", profile: "impulseur" },
+                { text: "Ouvert : j'aime avant tout les contacts variés et les approches ludiques ou atypiques", profile: "explorateur" }
+            ]
+        },
+        {
+            id: "Q3",
+            question: "Quand j'arrive dans une nouvelle équipe projet :",
+            answers: [
+                { text: "J'essaie de comprendre les personnalités de chacun", profile: "impulseur" },
+                { text: "J'essaie de décliner les ambitions en objectifs atteignables", profile: "concepteur" },
+                { text: "J'essaie d'apporter un nouvel angle d'approche", profile: "explorateur" }
+            ]
+        },
+        {
+            id: "Q4",
+            question: "En cas de problème sur un projet, j'ai tendance à :",
+            answers: [
+                { text: "Mettre les bouchées doubles pour sauver le projet", profile: "concepteur" },
+                { text: "Remotiver les membres de l'équipe", profile: "impulseur" },
+                { text: "Aller chercher de l'inspiration à l'extérieur", profile: "explorateur" }
+            ]
+        },
+        {
+            id: "Q5",
+            question: "Au sein d'une équipe de prototypage, je suis plutôt celui qui :",
+            answers: [
+                { text: "Orchestre les rituels d'équipe", profile: "impulseur" },
+                { text: "Donne des idées pour inspirer", profile: "explorateur" },
+                { text: "Identifie tous les scénarios possibles", profile: "concepteur" }
+            ]
+        },
+        {
+            id: "Q6",
+            question: "Lors d'une séance d'idéation je suis plutôt :",
+            answers: [
+                { text: "Pragmatique, j'ai des idées pour faire avancer la problématique", profile: "concepteur" },
+                { text: "Disruptif, j'ai souvent des idées qui sortent du cadre", profile: "explorateur" },
+                { text: "Animateur, j'aime encourager les débats", profile: "impulseur" }
+            ]
+        },
+        {
+            id: "Q7",
+            question: "Un rendez-vous vient d'être annulé, j'ai une heure de libre j'en profite pour :",
+            answers: [
+                { text: "Faire de la veille", profile: "explorateur" },
+                { text: "Échanger avec les autres membres de l'équipe pour voir où ils en sont", profile: "impulseur" },
+                { text: "M'avancer sur mes actions", profile: "concepteur" }
+            ]
+        },
+        {
+            id: "Q8",
+            question: "Lorsqu'on me demande mon aide c'est généralement pour :",
+            answers: [
+                { text: "Résoudre un conflit", profile: "impulseur" },
+                { text: "Débloquer une situation en trouvant une solution", profile: "explorateur" },
+                { text: "Trouver la cause racine d'un problème", profile: "concepteur" }
+            ]
+        },
+        {
+            id: "Q9",
+            question: "Lequel de ces 3 métiers pourriez-vous exercer :",
+            answers: [
+                { text: "Coach", profile: "impulseur" },
+                { text: "Architecte", profile: "concepteur" },
+                { text: "Publicitaire", profile: "explorateur" }
+            ]
+        }
+    ],
+    
+    methods: [
+        {
+            id: "M1",
+            domain: "agilite",
+            type: "auto_eval",
+            question: "Quel est votre niveau de maîtrise de l'Agilité ?",
+            answers: [
+                { text: "Faible", score: 0 },
+                { text: "Satisfaisant", score: 50 },
+                { text: "Parfait", score: 100 }
+            ]
+        },
+        {
+            id: "M2",
+            domain: "agilite",
+            type: "evaluation",
+            question: "Quel concept représente le mieux la philosophie Agile ?",
+            answers: [
+                { text: "Adaptation continue face au changement", score: 100 },
+                { text: "Construction de la documentation au fil du temps", score: 50 },
+                { text: "Réduction des coûts par anticipation", score: 0 }
+            ]
+        },
+        {
+            id: "M3",
+            domain: "agilite",
+            type: "evaluation",
+            question: "Parmi ces mots, lequel illustre le mieux l'esprit d'une équipe Agile ?",
+            answers: [
+                { text: "Autonomie encadrée par l'organisation", score: 50 },
+                { text: "Collaboration interdisciplinaire", score: 100 },
+                { text: "Hiérarchie et rôles clairement définis", score: 0 }
+            ]
+        },
+        {
+            id: "M4",
+            domain: "agilite",
+            type: "evaluation",
+            question: "Quel terme est central dans la gestion de projet Agile ?",
+            answers: [
+                { text: "Planning fixe sur le long terme", score: 0 },
+                { text: "Rapport de performance trimestriel", score: 50 },
+                { text: "Itération", score: 100 }
+            ]
+        },
+        {
+            id: "M5",
+            domain: "design_thinking",
+            type: "auto_eval",
+            question: "Quel est votre niveau de maîtrise du Design Thinking ?",
+            answers: [
+                { text: "Faible", score: 0 },
+                { text: "Satisfaisant", score: 50 },
+                { text: "Parfait", score: 100 }
+            ]
+        },
+        {
+            id: "M6",
+            domain: "design_thinking",
+            type: "evaluation",
+            question: "Quel mot incarne le mieux le point de départ d'un processus de Design Thinking ?",
+            answers: [
+                { text: "Recherche de rentabilité", score: 50 },
+                { text: "Vision stratégique", score: 0 },
+                { text: "Empathie client", score: 100 }
+            ]
+        },
+        {
+            id: "M7",
+            domain: "design_thinking",
+            type: "evaluation",
+            question: "Quel concept est au cœur du prototypage dans le Design Thinking ?",
+            answers: [
+                { text: "Tester rapidement des idées", score: 100 },
+                { text: "Réduire les coûts d'industrialisation", score: 50 },
+                { text: "Valider un concept informatique", score: 0 }
+            ]
+        },
+        {
+            id: "M8",
+            domain: "design_thinking",
+            type: "evaluation",
+            question: "Quelle notion est la plus liée à la phase d'idéation ?",
+            answers: [
+                { text: "Pensée utilisateur", score: 50 },
+                { text: "Pensée divergente", score: 100 },
+                { text: "Esprit créatif", score: 0 }
+            ]
+        },
+        {
+            id: "M9",
+            domain: "lean_startup",
+            type: "auto_eval",
+            question: "Quel est votre niveau de maîtrise du Lean Start-up ?",
+            answers: [
+                { text: "Faible", score: 0 },
+                { text: "Satisfaisant", score: 50 },
+                { text: "Parfait", score: 100 }
+            ]
+        },
+        {
+            id: "M10",
+            domain: "lean_startup",
+            type: "evaluation",
+            question: "Quel terme décrit le mieux l'approche de développement produit dans le Lean Start-up ?",
+            answers: [
+                { text: "Produit proposant des innovations", score: 0 },
+                { text: "Cahier des charges construit en itérations", score: 50 },
+                { text: "MVP (Produit Minimum Viable)", score: 100 }
+            ]
+        },
+        {
+            id: "M11",
+            domain: "lean_startup",
+            type: "evaluation",
+            question: "Quel principe est central dans le cycle Lean Start-up ?",
+            answers: [
+                { text: "Stratégie, déploiement, suivi", score: 50 },
+                { text: "Construction, mesure, apprentissage", score: 100 },
+                { text: "Vision, organisation, exécution", score: 0 }
+            ]
+        },
+        {
+            id: "M12",
+            domain: "lean_startup",
+            type: "evaluation",
+            question: "Quel mot reflète le mieux l'attitude attendue dans une démarche Lean Start-up ?",
+            answers: [
+                { text: "Cause et effet", score: 100 },
+                { text: "Apprentissage validé", score: 50 },
+                { text: "Croissance rapide", score: 0 }
+            ]
+        }
+    ]
+};
+
+// ============================================================================
+// DONNÉES DES PROFILS
+// ============================================================================
+
+const profilesData = {
+    impulseur: {
+        id: "impulseur",
+        name: "IMPULSEUR",
+        icon: "👥",
+        description: "« Énergiseur » d'équipe, l'impulseur nourrit le collectif"
+    },
+    concepteur: {
+        id: "concepteur",
+        name: "CONCEPTEUR", 
+        icon: "📦",
+        description: "« Résolveur » de casse tête, le concepteur rend possible"
+    },
+    explorateur: {
+        id: "explorateur",
+        name: "EXPLORATEUR",
+        icon: "🚀", 
+        description: "« Découvreur » de perspectives, l'explorateur apporte des idées"
+    }
+};
+
+// ============================================================================
+// CONFIGURATION DE L'APPLICATION
+// ============================================================================
+
+const appConfig = {
+    name: "Diagnostic Innovation",
+    version: "2.1.0",
+    description: "Evaluez votre profil d'innovateur et celle de votre entreprise",
+    author: "Valmen Consulting",
+    branding: {
+        company_name: "VALMEN",
+        company_subtitle: "CONSULTING",
+        tagline: "Nous œuvrons pour une digitalisation positive pour l'Humain"
+    }
+};
+
+// ============================================================================
+// API PUBLIQUE
+// ============================================================================
+
+/**
+ * Retourne les données des questions
+ */
+function getQuestionsData() {
+    console.log('📋 Chargement des questions depuis data.js');
+    return questionsData;
 }
 
+/**
+ * Retourne les données des profils
+ */
+function getProfilesData() {
+    console.log('👤 Chargement des profils depuis data.js');
+    return profilesData;
+}
+
+/**
+ * Retourne la configuration de l'application
+ */
 function getAppConfig() {
-    return globalDataManager ? globalDataManager.getConfig() : {};
+    console.log('⚙️ Chargement de la configuration depuis data.js');
+    return appConfig;
 }
 
-function getAppInfo() {
-    return globalDataManager ? globalDataManager.getAppInfo() : {
-        name: 'Diagnostic Innovation',
-        version: '2.0.0',
-        description: 'Découvrez votre profil d\'innovateur'
+/**
+ * Retourne les questions de méthodes
+ */
+function getMethodsQuestions() {
+    return questionsData.methods;
+}
+
+/**
+ * Retourne les questions d'organisation
+ */
+function getOrganizationQuestions() {
+    return questionsData.organization;
+}
+
+/**
+ * Retourne les questions d'identification
+ */
+function getIdentificationQuestions() {
+    return questionsData.identification;
+}
+
+/**
+ * Retourne les questions de diagnostic
+ */
+function getDiagnosticQuestions() {
+    return questionsData.diagnostic;
+}
+
+/**
+ * Retourne un profil spécifique
+ */
+function getProfile(profileId) {
+    return profilesData[profileId] || null;
+}
+
+/**
+ * Analyse les réponses utilisateur et calcule les scores
+ */
+function analyzeUserResults(userAnswers) {
+    console.log('🧮 Analyse des réponses utilisateur...');
+    
+    const scores = { concepteur: 0, explorateur: 0, impulseur: 0 };
+    
+    // Compter les réponses par profil
+    userAnswers.forEach((answer) => {
+        if (answer && answer.profile && scores.hasOwnProperty(answer.profile)) {
+            scores[answer.profile]++;
+        }
+    });
+    
+    // Calculer les pourcentages
+    const total = userAnswers.length;
+    const percentages = {};
+    Object.keys(scores).forEach(profile => {
+        percentages[profile] = total > 0 ? Math.round((scores[profile] / total) * 100) : 0;
+    });
+    
+    // Déterminer le profil dominant
+    let maxScore = -1;
+    let dominantProfile = 'concepteur';
+    
+    Object.entries(percentages).forEach(([profile, score]) => {
+        if (score > maxScore) {
+            maxScore = score;
+            dominantProfile = profile;
+        }
+    });
+    
+    // Créer le classement
+    const ranking = Object.entries(percentages)
+        .sort(([,a], [,b]) => b - a)
+        .map(([profile, score]) => ({ profile, score }));
+    
+    console.log('✅ Analyse terminée - Profil dominant:', dominantProfile);
+    
+    return {
+        scores: percentages,
+        dominant: dominantProfile,
+        ranking: ranking,
+        analysis: {
+            totalQuestions: total,
+            rawScores: scores,
+            dominantScore: maxScore
+        }
     };
 }
 
-// ============================================================================
-// UTILITAIRES DE DEBUG
-// ============================================================================
-
-function debugDataStatus() {
-    if (!globalDataManager) {
-        console.log('❌ DataManager non initialisé');
-        return;
+/**
+ * Valide la structure des données
+ */
+function validateData() {
+    console.log('🔍 Validation des données...');
+    
+    const errors = [];
+    
+    // Validation des questions d'identification
+    if (!questionsData.identification || questionsData.identification.length === 0) {
+        errors.push('Questions d\'identification manquantes');
     }
     
-    const status = globalDataManager.getLoadStatus();
-    const stats = globalDataManager.getQuestionnaireStats();
-    
-    console.log('📊 Status des données:', status);
-    console.log('📋 Statistiques questionnaire:', stats);
-    
-    if (globalScoreCalculator) {
-        console.log('🧮 Calculateur de scores: ✅ Initialisé');
-    } else {
-        console.log('🧮 Calculateur de scores: ❌ Non initialisé');
+    // Validation des questions d'organisation
+    if (!questionsData.organization || questionsData.organization.length === 0) {
+        errors.push('Questions d\'organisation manquantes');
     }
+    
+    // Validation des questions de diagnostic
+    if (!questionsData.diagnostic || questionsData.diagnostic.length === 0) {
+        errors.push('Questions de diagnostic manquantes');
+    }
+    
+    // Validation des questions de méthodes
+    if (!questionsData.methods || questionsData.methods.length === 0) {
+        errors.push('Questions de méthodes manquantes');
+    }
+    
+    // Validation des profils
+    const requiredProfiles = ['concepteur', 'explorateur', 'impulseur'];
+    requiredProfiles.forEach(profile => {
+        if (!profilesData[profile]) {
+            errors.push(`Profil manquant: ${profile}`);
+        }
+    });
+    
+    if (errors.length > 0) {
+        console.warn('⚠️ Erreurs de validation:', errors);
+        return { valid: false, errors };
+    }
+    
+    console.log('✅ Données validées avec succès');
+    return { valid: true, errors: [] };
 }
 
-function exportAllData() {
-    if (!globalDataManager) {
-        console.error('❌ DataManager non initialisé');
-        return null;
-    }
-    
-    return globalDataManager.exportQuestionnaire();
+/**
+ * Retourne les statistiques des données
+ */
+function getDataStats() {
+    return {
+        identification: {
+            count: questionsData.identification.length,
+            questions: questionsData.identification.map(q => q.id)
+        },
+        organization: {
+            count: questionsData.organization.length,
+            questions: questionsData.organization.map(q => q.id)
+        },
+        diagnostic: {
+            count: questionsData.diagnostic.length,
+            questions: questionsData.diagnostic.map(q => q.id)
+        },
+        methods: {
+            count: questionsData.methods.length,
+            questions: questionsData.methods.map(q => q.id)
+        },
+        profiles: {
+            count: Object.keys(profilesData).length,
+            profiles: Object.keys(profilesData)
+        },
+        version: appConfig.version
+    };
 }
 
 // ============================================================================
 // INITIALISATION AUTOMATIQUE
 // ============================================================================
 
-console.log('📁 data.js v2.0 chargé');
+// Validation automatique au chargement
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📁 data.js v2.1.0 minimal chargé');
+    
+    const validation = validateData();
+    if (!validation.valid) {
+        console.error('❌ Erreurs dans les données:', validation.errors);
+    }
+    
+    const stats = getDataStats();
+    console.log('📊 Statistiques des données:', stats);
+});
 
-// Fonction d'initialisation qui sera appelée par app.js
-window.initializeDataManager = initializeData;
+// ============================================================================
+// EXPOSITION GLOBALE
+// ============================================================================
+
+// Exposition des fonctions principales pour app.js
+window.getQuestionsData = getQuestionsData;
+window.getProfilesData = getProfilesData;
+window.getAppConfig = getAppConfig;
+window.analyzeUserResults = analyzeUserResults;
+
+// Fonctions utilitaires
+window.getMethodsQuestions = getMethodsQuestions;
+window.getOrganizationQuestions = getOrganizationQuestions;
+window.getIdentificationQuestions = getIdentificationQuestions;
+window.getDiagnosticQuestions = getDiagnosticQuestions;
+window.getProfile = getProfile;
+window.validateData = validateData;
+window.getDataStats = getDataStats;
