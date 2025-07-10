@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagnostic Innovation v2.0 - Valmen Consulting</title>
+    <title>Diagnostic Innovation v2.2 - Valmen Consulting</title>
     <meta name="description" content="Découvrez votre profil d'innovateur selon la méthode Valmen Consulting">
     <meta name="author" content="Valmen Consulting">
     <meta name="robots" content="noindex, nofollow">
@@ -11,21 +11,18 @@
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
     
-    <!-- Styles -->
-    <link rel="stylesheet" href="css/main.css">
-    
     <!-- External Dependencies -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
     <!-- Loading Screen -->
-    <div id="loading-screen" class="screen active">
+    <div id="loading-screen" class="screen">
         <div class="card">
             <div class="header text-center">
                 <div class="loading-spinner"></div>
                 <h1>Initialisation</h1>
-                <p>Chargement du Diagnostic Innovation v2.0...</p>
+                <p>Chargement du Diagnostic Innovation v2.2...</p>
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: 0%; animation: pulse 2s infinite;"></div>
                 </div>
@@ -33,21 +30,92 @@
             </div>
         </div>
     </div>
+<!-- Module Selection Screen -->
+<div id="module-selection-screen" class="screen">
+    <div class="card">
+        <div class="header">
+            <div class="version-badge">Version 2.2 Complète</div>
+            <h1>🚀 Diagnostic Innovation</h1>
+            <p>Quels modules souhaitez-vous réaliser ?</p>
+            
+            <div class="brand-info">
+                <div class="brand-name">VALMEN</div>
+                <div class="brand-subtitle">CONSULTING</div>
+                <div class="brand-tagline">Nous œuvrons pour une digitalisation positive pour l'Humain</div>
+            </div>
+        </div>
 
-    <!-- Welcome Screen -->
-    <div id="welcome-screen" class="screen">
+        <div class="validation-error" id="validationError" style="display: none;">
+            ⚠️ Veuillez sélectionner au moins un module optionnel en plus du module obligatoire
+        </div>
+        
+        <div class="modules-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-bottom: 40px;">
+            <!-- Module Innovation Organisation -->
+            <div class="module-card required" data-module="organisation" data-time="10">
+                <div class="module-header" style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <div class="module-checkbox" style="width: 24px; height: 24px; border: 2px solid #28a745; border-radius: 6px; margin-right: 15px; display: flex; align-items: center; justify-content: center; background: #28a745; color: white; font-weight: bold;">✓</div>
+                    <div class="module-time" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 6px 15px; border-radius: 15px; font-size: 0.85em; font-weight: 600; margin-left: auto;">10 MINUTES</div>
+                </div>
+                <h3 class="module-title" style="color: #28a745; font-size: 1.2em; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Innovation de l'organisation</h3>
+                <p class="module-subtitle" style="color: #666; font-size: 0.9em; font-style: italic; margin-bottom: 15px; font-weight: 500;">Maturité collective et diffusion de l'innovation</p>
+                <p class="module-description" style="color: #333; line-height: 1.5; margin-bottom: 15px; font-size: 0.95em;">
+                    Évaluez la capacité de votre organisation à innover collectivement et à diffuser l'innovation à tous les niveaux.
+                </p>
+                <span class="module-badge" style="display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; background: #28a745; color: white;">Obligatoire</span>
+            </div>
+
+            <!-- Module Profil Innovateur -->
+            <div class="module-card" data-module="profil" data-time="10">
+                <div class="module-header" style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <div class="module-checkbox" style="width: 24px; height: 24px; border: 2px solid #ddd; border-radius: 6px; margin-right: 15px; display: flex; align-items: center; justify-content: center; font-weight: bold;"></div>
+                    <div class="module-time" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 6px 15px; border-radius: 15px; font-size: 0.85em; font-weight: 600; margin-left: auto;">10 MINUTES</div>
+                </div>
+                <h3 class="module-title" style="color: #764ba2; font-size: 1.2em; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Profil d'innovateur</h3>
+                <p class="module-subtitle" style="color: #666; font-size: 0.9em; font-style: italic; margin-bottom: 15px; font-weight: 500;">Personnalité en contexte créatif</p>
+                <p class="module-description" style="color: #333; line-height: 1.5; margin-bottom: 15px; font-size: 0.95em;">
+                    Découvrez votre profil d'innovateur : Impulseur, Concepteur ou Explorateur selon la méthode Valmen.
+                </p>
+                <span class="module-badge" style="display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; background: #17a2b8; color: white;">Au choix</span>
+            </div>
+
+            <!-- Module Niveau Méthodologique -->
+            <div class="module-card" data-module="methodes" data-time="15">
+                <div class="module-header" style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <div class="module-checkbox" style="width: 24px; height: 24px; border: 2px solid #ddd; border-radius: 6px; margin-right: 15px; display: flex; align-items: center; justify-content: center; font-weight: bold;"></div>
+                    <div class="module-time" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 6px 15px; border-radius: 15px; font-size: 0.85em; font-weight: 600; margin-left: auto;">15 MINUTES</div>
+                </div>
+                <h3 class="module-title" style="color: #764ba2; font-size: 1.2em; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Niveau méthodologique</h3>
+                <p class="module-subtitle" style="color: #666; font-size: 0.9em; font-style: italic; margin-bottom: 15px; font-weight: 500;">Maturité individuelle des pratiques et outils</p>
+                <p class="module-description" style="color: #333; line-height: 1.5; margin-bottom: 15px; font-size: 0.95em;">
+                    Évaluez votre maîtrise des méthodes Agile, Design Thinking et Lean Start-up.
+                </p>
+                <span class="module-badge" style="display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; background: #17a2b8; color: white;">Au choix</span>
+            </div>
+        </div>
+
+        <div class="estimated-time" id="estimatedTime" style="text-align: center; margin: 20px 0; color: rgba(255,255,255,0.9); font-size: 1.1em; font-weight: 500;">
+            Temps estimé : 10 minutes
+        </div>
+        
+        <div style="text-align: center;">
+            <button class="btn btn-primary" id="startButton" onclick="validateModuleSelection()">
+                Commencer le diagnostic
+            </button>
+        </div>
+    </div>
+</div>
+    <!-- Identification Screen -->
+    <div id="identification-screen" class="screen">
         <div class="card">
             <div class="header text-center">
-                <h1>🚀 Diagnostic Innovation</h1>
-                <div class="version-badge">v2.0</div>
-                <p>Découvrez votre profil d'innovateur</p>
+                <h1>👤 Diagnostic Innovation</h1>
+                <div class="version-badge">v2.2</div>
+                <p>Quelques informations pour personnaliser votre diagnostic</p>
                 
                 <div class="brand-info">
                     <div class="brand-name">VALMEN</div>
                     <div class="brand-subtitle">CONSULTING</div>
-                    <!-- <div class="brand-tagline">
-                        "Pour être expert, rien ne sert d'être austère"
-                    </div> -->
+                    <div class="brand-tagline">Nous œuvrons pour une digitalisation positive pour l'Humain</div>
                 </div>
             </div>
             
@@ -61,11 +129,36 @@
                     <label for="participantCompany">Entreprise :</label>
                     <input type="text" id="participantCompany" placeholder="Nom de votre entreprise">
                 </div>
+
+                <div class="form-group">
+                    <label for="participantEmail">Mon adresse mail (facultatif) :</label>
+                    <input type="email" id="participantEmail" placeholder="votre@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="participantRole">Dans mon organisation, j'ai le rôle de :</label>
+                    <select id="participantRole" style="width: 100%; padding: 15px 20px; border: 2px solid #e8e8e8; border-radius: 15px; font-size: 1.1em; background: #fafafa; transition: all 0.3s ease;">
+                        <option value="">Sélectionnez votre rôle</option>
+                        <option value="Direction">Direction</option>
+                        <option value="Management">Management</option>
+                        <option value="Opérationnel">Opérationnel</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="participantDirection">J'exerce mon rôle dans une Direction :</label>
+                    <select id="participantDirection" style="width: 100%; padding: 15px 20px; border: 2px solid #e8e8e8; border-radius: 15px; font-size: 1.1em; background: #fafafa; transition: all 0.3s ease;">
+                        <option value="">Sélectionnez votre direction</option>
+                        <option value="Informatique">Informatique</option>
+                        <option value="Métier">Métier</option>
+                        <option value="Support">Support</option>
+                    </select>
+                </div>
             </div>
             
-            <div style="text-align: center;">
+            <div style="text-align: center; margin-top: 30px;">
                 <button class="btn btn-primary" onclick="startDiagnostic()">
-                    Commencer le diagnostic
+                    Commencer le questionnaire
                 </button>
             </div>
         </div>
@@ -104,6 +197,66 @@
         </div>
     </div>
 
+    <!-- Écran de remerciement après Organisation (OBLIGATOIRE) -->
+    <div id="remerciement-organisation-screen" class="screen">
+        <div class="card">
+            <div class="header">
+                <h1>📊 PREMIÈRE PARTIE COMPLÉTÉE</h1>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <div style="background: linear-gradient(135deg, #f8f9ff, #f0f4ff); border-radius: 20px; padding: 25px; margin: 20px 0;">
+                    <div style="font-size: 1.3em; color: #764ba2; font-weight: 600; margin-bottom: 15px;">
+                        🏢 Innovation de l'organisation : ✅ Terminé
+                    </div>
+                    
+                    <div style="color: #666; margin-bottom: 20px;" id="remainingModulesText">
+                        À venir selon votre sélection :
+                    </div>
+                    
+                    <div id="selectedModulesList" style="color: #764ba2; font-weight: 500;">
+                        <!-- Sera rempli dynamiquement -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="modifyOrganisationResponses()">← Modifier mes réponses</button>
+                <button class="btn btn-primary" onclick="continueToSelectedModules()">Continuer →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Écran de pause entre questionnaires optionnels (SI LES 2 SÉLECTIONNÉS) -->
+    <div id="pause-entre-optionnels-screen" class="screen">
+        <div class="card">
+            <div class="header">
+                <h1 id="pause-title">📊 PROFIL INNOVATEUR TERMINÉ</h1>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <div style="background: linear-gradient(135deg, #f8f9ff, #f0f4ff); border-radius: 20px; padding: 25px; margin: 20px 0;">
+                    <div style="font-size: 1.3em; color: #764ba2; font-weight: 600; margin-bottom: 15px;" id="completed-module">
+                        👤 Profil innovateur : ✅ Terminé
+                    </div>
+                    
+                    <div style="color: #666; margin-bottom: 20px;" id="remaining-time-text">
+                        Temps restant estimé :
+                    </div>
+                    
+                    <div id="next-module-info" style="color: #764ba2; font-weight: 500;">
+                        🔧 Niveau méthodologique : 15 minutes
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="modifyCurrentQuestionnaire()">← Modifier mes réponses</button>
+                <button class="btn btn-primary" onclick="continueToNextOptional()">Continuer →</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Results Screen -->
     <div id="results-screen" class="screen">
         <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
@@ -118,6 +271,17 @@
             
             <div id="results-container" style="display: flex; justify-content: center; gap: 20px; margin: 40px 0; flex-wrap: wrap;">
                 <!-- Les résultats seront générés dynamiquement -->
+            </div>
+
+            <!-- Section Méthodes -->
+            <div style="margin: 40px 0;">
+                <h2 style="color: white; font-size: 1.8em; margin-bottom: 30px; text-align: center; font-style: italic; font-weight: 300;">
+                    🔧 VOTRE NIVEAU MÉTHODOLOGIQUE
+                </h2>
+                
+                <div id="methodsDetailsList" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; align-items: start;">
+                    <!-- Les résultats des méthodes seront injectés ici -->
+                </div>
             </div>
             
             <!-- Export Status - Masqué -->
@@ -145,7 +309,7 @@
     <!-- Version Info -->
     <div style="position: fixed; bottom: 20px; right: 20px;">
         <div style="background: rgba(118, 75, 162, 0.1); color: #764ba2; padding: 8px 12px; border-radius: 6px; font-size: 0.8em; font-weight: 600; border: 1px solid rgba(118, 75, 162, 0.2);">
-            v2.0
+            v2.2
         </div>
     </div>
 
@@ -154,7 +318,7 @@
     <script src="js/data.js"></script>
     <script src="js/app.js"></script>
 
-    <!-- Styles pour les composants spécifiques -->
+    <!-- Styles pour tous les composants -->
     <style>
         /* Reset et base */
         * {
@@ -187,7 +351,7 @@
             margin-bottom: 25px;
             position: relative;
             transition: all 0.3s ease;
-            max-width: 900px;
+            max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -281,7 +445,7 @@
             font-size: 1.1em;
         }
 
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 15px 20px;
             border: 2px solid #e8e8e8;
@@ -291,7 +455,7 @@
             background: #fafafa;
         }
 
-        .form-group input:focus {
+        .form-group input:focus, .form-group select:focus {
             outline: none;
             border-color: #764ba2;
             background: white;
@@ -338,7 +502,7 @@
             box-shadow: 0 8px 25px rgba(118, 75, 162, 0.3);
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 15px 35px rgba(118, 75, 162, 0.4);
         }
@@ -400,7 +564,7 @@
         .screen {
             display: none;
             opacity: 0;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.3s ease;
         }
 
         .screen.active {
@@ -569,6 +733,16 @@
 
             .nav-buttons .btn {
                 width: 100%;
+            }
+            
+            .brand-name {
+                font-size: 1.3em;
+                letter-spacing: 2px;
+            }
+
+            #methodsDetailsList {
+                grid-template-columns: 1fr;
+                gap: 20px;
             }
         }
     </style>
