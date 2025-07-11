@@ -1,1 +1,88 @@
-
+[
+  {
+    "id": "diag_001",
+    "timestamp": "2025-01-17T10:30:00Z",
+    "version": "2.2",
+    "participant": {
+      "name": "Jean Dupont",
+      "email": "jean.dupont@entreprise.fr",
+      "company": "TechCorp SA",
+      "role": "Management",
+      "direction": "Informatique"
+    },
+    "selected_modules": {
+      "organisation": true,
+      "profil": true,
+      "methodes": true
+    },
+    "profil_scores": {
+      "concepteur": 45,
+      "explorateur": 22,
+      "impulseur": 33,
+      "dominant_profile": "concepteur"
+    },
+    "methodes_scores": {
+      "agilite": {
+        "perception": 50,
+        "reel": 75
+      },
+      "design_thinking": {
+        "perception": 100,
+        "reel": 60
+      },
+      "lean_startup": {
+        "perception": 0,
+        "reel": 25
+      }
+    },
+    "organisation_responses": {
+      "e1": {
+        "thematique": "Gouvernance",
+        "question_id": "E1",
+        "choice": "Selon vous, quel animal reflèterait le mieux votre organisation ?",
+        "answer_id": "E1Q2",
+        "text": "Un fauve, parfois brute mais qui atteint souvent son objectif"
+      },
+      "e2": {
+        "thematique": "Origine",
+        "question_id": "E2", 
+        "choice": "Je dirais que dans mon organisation, ce qui déclenche l'innovation c'est :",
+        "answer_id": "E2Q1",
+        "text": "La déclinaison de la stratégie définie par la Direction"
+      }
+    }
+  },
+  {
+    "id": "diag_002",
+    "timestamp": "2025-01-17T14:15:00Z",
+    "version": "2.2",
+    "participant": {
+      "name": "Marie Martin",
+      "email": "marie.martin@startup.fr",
+      "company": "InnovateLab",
+      "role": "Direction",
+      "direction": "Métier"
+    },
+    "selected_modules": {
+      "organisation": true,
+      "profil": true,
+      "methodes": false
+    },
+    "profil_scores": {
+      "concepteur": 11,
+      "explorateur": 67,
+      "impulseur": 22,
+      "dominant_profile": "explorateur"
+    },
+    "methodes_scores": null,
+    "organisation_responses": {
+      "e1": {
+        "thematique": "Gouvernance",
+        "question_id": "E1",
+        "choice": "Selon vous, quel animal reflèterait le mieux votre organisation ?",
+        "answer_id": "E1Q3",
+        "text": "Une antilope, pas la plus impressionnante mais rapide pour atteindre sa destination"
+      }
+    }
+  }
+]
